@@ -1,4 +1,11 @@
+![Vacation Screenshot](https://github.com/vanshnagpal1902/vacationallcalender/raw/main/photos/WhatsApp%20Image%202025-09-25%20at%2018.34.39.jpeg)
+![Vacation Screenshot 1](https://github.com/vanshnagpal1902/vacationallcalender/raw/main/photos/WhatsApp%20Image%202025-09-25%20at%2018.38.40.jpeg)
 
+![Vacation Screenshot 2](https://github.com/vanshnagpal1902/vacationallcalender/raw/main/photos/WhatsApp%20Image%202025-09-25%20at%2018.38.50.jpeg)
+
+![Vacation Screenshot 3](https://github.com/vanshnagpal1902/vacationallcalender/raw/main/photos/WhatsApp%20Image%202025-09-25%20at%2018.40.07.jpeg)
+
+![Vacation Screenshot 4](https://github.com/vanshnagpal1902/vacationallcalender/raw/main/photos/WhatsApp%20Image%202025-09-25%20at%2018.40.49.jpeg)
 
 
 # 🌴 Vacation Calendar (Node.js + Express + EJS)
@@ -113,3 +120,4 @@ GET /quarterly?country=US&year=2025&q=3&focusDate=2025-07-04
 ```
 
 ---
+
