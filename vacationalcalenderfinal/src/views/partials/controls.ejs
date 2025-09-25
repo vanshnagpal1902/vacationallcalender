@@ -1,0 +1,38 @@
+<form class="controls" method="get" action="<%= action || '/' %>">
+  <label>
+    Country
+    <select name="country">
+      <% (availableCountries || []).forEach(c => { %>
+        <option value="<%= c.code %>" <%= c.code === country ? 'selected' : '' %>><%= c.name %></option>
+      <% }); %>
+    </select>
+  </label>
+
+  <% if (view === 'monthly') { %>
+    <label>
+      Year
+      <input type="number" name="year" value="<%= year %>" min="1970" max="2100" />
+    </label>
+    <label>
+      Month
+      <input type="number" name="month" value="<%= month %>" min="1" max="12" />
+    </label>
+  <% } %>
+
+  <% if (view === 'quarterly') { %>
+    <label>
+      Year
+      <input type="number" name="year" value="<%= year %>" min="1970" max="2100" />
+    </label>
+    <label>
+      Quarter
+      <input type="number" name="q" value="<%= quarter %>" min="1" max="4" />
+    </label>
+  <% } %>
+
+  
+
+  <button type="submit">Apply</button>
+</form>
+
+

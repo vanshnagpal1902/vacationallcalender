@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Vacation Calendar' %></title>
+  <style>
+  :root {
+    --light-green: #c9f7d5;
+    --dark-green: #86e3a4;
+  }
+
+  body { font-family: Arial, sans-serif; margin: 0; color: #222; }
+  .app-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #f5f5f5; border-bottom: 1px solid #ddd; }
+  .app-header a { margin-right: 8px; }
+  .container { padding: 16px; }
+
+  .controls { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; align-items: end; }
+  .controls label { display: flex; flex-direction: column; font-size: 14px; }
+
+  .months-grid.single { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .months-grid.triple { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  .month { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: white; }
+  .month-header { padding: 8px 12px; background: #fafafa; border-bottom: 1px solid #eee; font-weight: bold; }
+  .calendar { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .calendar th, .calendar td { border: 1px solid #eee; vertical-align: top; padding: 6px; }
+  .calendar th { background: #fafafa; font-weight: 600; font-size: 12px; }
+  .calendar td.empty { background: #fafafa; }
+
+  .week-light-green { background: var(--light-green); }
+  .week-dark-green { background: var(--dark-green); }
+
+  .day { position: relative; min-height: 68px; }
+  .day-holiday { background: #ffe9e9; }
+  /* Dark green row for weeks with 2+ consecutive holidays, but keep holiday cells' own color */
+  .has-consecutive-holidays td:not(.day-holiday) { background: var(--dark-green); }
+  /* Light green row for weeks with exactly one holiday, non-holiday cells only */
+  .has-single-holiday td:not(.day-holiday) { background: var(--light-green); }
+  .date-num { font-size: 12px; color: #666; margin-bottom: 4px; }
+  .holiday { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: #eef7ff; border-radius: 4px; padding: 2px 4px; margin-bottom: 2px; }
+  .more { font-size: 11px; color: #555; }
+
+  @media (max-width: 900px) {
+    .months-grid.triple { grid-template-columns: 1fr; }
+  }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <h1>Vacation Calendar</h1>
+    <nav>
+      <a href="/">Monthly</a>
+      <a href="/quarterly">Quarterly</a>
+    </nav>
+  </header>
+  <main class="container">
+    <%- body %>
+  </main>
+</body>
+</html>
+
+

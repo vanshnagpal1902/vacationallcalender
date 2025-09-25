@@ -1,0 +1,13 @@
+<% const isMonthly = typeof month !== 'undefined' && month !== null; %>
+
+<% if (isMonthly) { %>
+<%- include('partials/controls', { action: '/', view: 'monthly', availableCountries, country, year, month, quarter: undefined }) %>
+
+<%- include('partials/calendarGrid', { mode: 'monthly', year, month, holidays }) %>
+<% } else { %>
+<%- include('partials/controls', { action: '/quarterly', view: 'quarterly', availableCountries, country, year, month: undefined, quarter }) %>
+
+<%- include('partials/calendarGrid', { mode: 'quarterly', year, startMonth, holidays }) %>
+<% } %>
+
+

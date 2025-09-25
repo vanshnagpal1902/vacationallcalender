@@ -1,0 +1,125 @@
+<% /*
+  Inputs:
+    year, month (1-12) OR startMonth for quarterly
+    holidays: [{ date: 'YYYY-MM-DD', name/localName }]
+    mode: 'monthly' | 'quarterly'
+*/ %>
+<% /* dayjs is provided via app.locals */ %>
+
+<% function getWeeksForMonth(y, m) {
+  const first = dayjs(`${y}-${String(m).padStart(2,'0')}-01`);
+  const daysInMonth = first.daysInMonth();
+  const weeks = [];
+  let week = [];
+  // Start on Monday (ISO week) alignment in a 7-day grid
+  const startPadding = (first.day() + 6) % 7; // convert 0=Sun..6=Sat -> 0=Mon..6=Sun
+  for (let i = 0; i < startPadding; i++) week.push(null);
+  for (let d = 1; d <= daysInMonth; d++) {
+    week.push(dayjs(`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`));
+    if (week.length === 7) { weeks.push(week); week = []; }
+  }
+  if (week.length) {
+    while (week.length < 7) week.push(null);
+    weeks.push(week);
+  }
+  return weeks;
+} %>
+
+<% function holidaysByDateMap(holidaysArr) {
+  const map = new Map();
+  holidaysArr.forEach(h => {
+    if (!map.has(h.date)) map.set(h.date, []);
+    map.get(h.date).push(h);
+  });
+  return map;
+} %>
+
+<% const hMap = holidaysByDateMap(holidays || []); %>
+
+<% /* Row-level helper retained for potential future highlighting but not used for coloring */ %>
+<% function weekHighlightClass(weekCells) {
+  let totalHolidays = 0;
+  weekCells.forEach(d => {
+    if (!d) return;
+    const key = d.format('YYYY-MM-DD');
+    const num = (hMap.get(key) || []).length;
+    totalHolidays += Math.min(num, 1);
+  });
+  if (totalHolidays > 2) return 'week-dark-green';
+  if (totalHolidays === 1) return 'week-light-green';
+  return '';
+} %>
+
+<% function renderMonth(y, m) { %>
+  <div class="month">
+    <div class="month-header"><%= dayjs(`${y}-${String(m).padStart(2,'0')}-01`).format('MMMM YYYY') %></div>
+    <table class="calendar">
+      <thead>
+        <tr>
+          <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% const weeks = getWeeksForMonth(y, m); %>
+        <% weeks.forEach(week => { %>
+          <% // Determine if there are 2 or more holidays in a row within this week
+             const hasConsecutiveHolidays = (() => {
+               let run = 0;
+               for (let i = 0; i < week.length; i++) {
+                 const cell = week[i];
+                 if (!cell) { run = 0; continue; }
+                 const k = cell.format('YYYY-MM-DD');
+                 const isHoliday = (hMap.get(k) || []).length > 0;
+                 if (isHoliday) {
+                   run += 1;
+                   if (run >= 2) return true;
+                 } else {
+                   run = 0;
+                 }
+               }
+               return false;
+             })();
+             // Determine if the week has exactly one holiday day
+             const totalHolidayDays = week.reduce((acc, c) => {
+               if (!c) return acc;
+               const k = c.format('YYYY-MM-DD');
+               return acc + ((hMap.get(k) || []).length > 0 ? 1 : 0);
+             }, 0);
+             const hasSingleHoliday = totalHolidayDays === 1; %>
+          <tr class="<%= hasConsecutiveHolidays ? 'has-consecutive-holidays' : (hasSingleHoliday ? 'has-single-holiday' : '') %>">
+            <% week.forEach(cell => { %>
+              <% if (!cell) { %>
+                <td class="empty"></td>
+              <% } else { %>
+                <% const key = cell.format('YYYY-MM-DD'); const dayHolidays = hMap.get(key) || []; %>
+                <td class="day <%= dayHolidays.length > 0 ? 'day-holiday' : '' %>">
+                  <div class="date-num"><%= cell.date() %></div>
+                  <% dayHolidays.slice(0,3).forEach(h => { %>
+                    <div class="holiday" title="<%= h.localName || h.name %>"><%= h.localName || h.name %></div>
+                  <% }) %>
+                  <% if (dayHolidays.length > 3) { %>
+                    <div class="more">+<%= dayHolidays.length - 3 %> more</div>
+                  <% } %>
+                </td>
+              <% } %>
+            <% }); %>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<% if (mode === 'monthly') { %>
+  <div class="months-grid single">
+    <%= renderMonth(year, month) %>
+  </div>
+<% } else { %>
+  <div class="months-grid triple">
+    <%= renderMonth(year, startMonth) %>
+    <%= renderMonth(year, startMonth + 1) %>
+    <%= renderMonth(year, startMonth + 2) %>
+  </div>
+<% } %>
+
+
