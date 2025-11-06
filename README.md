@@ -23,8 +23,8 @@ Holidays are fetched dynamically from the public [Nager.Date API](https://date.n
 * **Week highlighting rules**:
 
   * Exactly **1 holiday** in a week → light green
-  * More than **2 holidays** in a week → dark green
-  * Exactly **2 holidays** → no highlight
+  * More than or equal  **2 holidays** in a week → dark green
+  *
 * Optional **focus** on a specific holiday date (`YYYY-MM-DD`)
 
 ---
@@ -120,4 +120,5 @@ GET /quarterly?country=US&year=2025&q=3&focusDate=2025-07-04
 ```
 
 ---
+
 
